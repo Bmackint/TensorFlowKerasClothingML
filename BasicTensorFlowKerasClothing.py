@@ -1,3 +1,4 @@
+##https://www.tensorflow.org/tutorials/keras/basic_classification
 import tensorflow as tf
 from tensorflow import keras
 
@@ -59,3 +60,35 @@ model = keras.Sequential([
     keras.layers.Dense(128, activation=tf.nn.relu), ##note: read up on and tutorial of Rectified linear activation function
     keras.layers.Dense(10, activation=tf.nn.softmax) ##note: read up on and tutorial of softmax activation function
 ])
+
+##compile model
+model.compile(optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy'
+])
+
+##train model
+bTrainSuccess = False
+numberOfTrainFalures = 0
+while(not bTrainSuccess):
+    try:
+        model.fit(train_images, train_labels, epochs=5)
+        bTrainSuccess = True
+    except:
+        numberOfTrainFalures = numberOfTrainFalures + 1
+
+## evaluate accuracy
+test_loss, test_accuracy = model.evaluate(test_images, test_labels)
+
+print('Test accuracy : ' + str(test_accuracy))
+print("Test loss : {0}".format(test_loss))
+
+
+## make predictions
+predictions = model.predict(test_images)
+
+print("prediction at [0] : " + str([predictions[0]])) #prints confidence that image corresponds to each article of clothing
+
+np.argmax(predictions[0]) # highest confidence value
+print("actual label value = " + str(test_labels[0]))
+
